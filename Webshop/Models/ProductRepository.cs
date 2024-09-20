@@ -85,12 +85,12 @@ namespace Webshop.Models
 
         public void Update(Product product)
         {
-            string query = "UPDATE PRODUCTS SET Number = @Number WHERE ProductID = @ProductID";
+            string query = "UPDATE PRODUCTS SET CategoryID = @CategoryID WHERE ProductID = @ProductID";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@ProductName", product.ProductName);
+                command.Parameters.AddWithValue("@CategoryID", product.CategoryID);
                 command.Parameters.AddWithValue("@ProductID", product.ProductID);
                 connection.Open();
                 command.ExecuteNonQuery();
