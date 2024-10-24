@@ -10,7 +10,7 @@
         <ListBox x:Name="lbproducts" Margin="0,10,526,34">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding CategoryID}"/>
+                    <TextBlock Text="{Binding Name}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

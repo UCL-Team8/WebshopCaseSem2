@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Diagnostics.Metrics;
+using System.Net;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -36,30 +38,32 @@ namespace Webshop
 
 
 
-            // Adding a new product
-            productRepository.Add(new Product { ProductName = "2024", CategoryID = 1 });
+            //// Adding a new product
+            //productRepository.Add(new Product { ProductName = "2024", CategoryID = 1 });
 
             // Getting all products
-            var products = productRepository.GetAll();
-            foreach (var product in products)
-            {
-                Console.WriteLine($"Product ID: {product.ProductID}, ProductName: {product.ProductName}");
-            }
+            //var products = productRepository.GetAll();
+            //foreach (var product in products)
+            //{
+            //    Console.WriteLine($"Product ID: {product.ProductID}, ProductName: {product.ProductName}");
+            //}
 
-            // Updating a product
-            var firstProduct = productRepository.GetById(1);
-            if (firstProduct != null)
-            {
-                firstProduct.CategoryID = 1;
-                productRepository.Update(firstProduct);
-            }
+            //// Updating a product
+            //var firstProduct = productRepository.GetById(1);
+            //if (firstProduct != null)
+            //{
+            //    firstProduct.CategoryID = 1;
+            //    productRepository.Update(firstProduct);
+            //}
 
-            // Deleting a product
-            productRepository.Delete(1);
+            //// Deleting a product
+            //productRepository.Delete(1);
 
 
 
-            lbproducts.ItemsSource = productRepository.GetAll();
+            lbproducts.ItemsSource = productRepository.GetAllCustomers();
+
+            productRepository.AddCustomer("Susi", "Schmidt", "schmidtsu@hotmail.de", "Schmetterstrasse 62", "Köln", "Tyskland", 750);
 
         }
     }

@@ -1,7 +1,11 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data;
+using System.Diagnostics.Metrics;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,7 +23,7 @@ namespace Webshop.Models
         public IEnumerable<Product> GetAll()
         {
             var products = new List<Product>();
-            string query = "SELECT * FROM PRODUCTS";
+            string query = "SELECT * FROM PRODUCT";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -45,7 +49,7 @@ namespace Webshop.Models
         public Product GetById(int id)
         {
             Product product = null;
-            string query = "SELECT * FROM PRODUCTS WHERE ProductID = @ProductID";
+            string query = "SELECT * FROM PRODUCT WHERE ProductID = @ProductID";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -71,7 +75,7 @@ namespace Webshop.Models
 
         public void Add(Product product)
         {
-            string query = "INSERT INTO PRODUCTS (CategoryID) VALUES (@CategoryID)";
+            string query = "INSERT INTO PRODUCT (CategoryID) VALUES (@CategoryID)";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -85,7 +89,7 @@ namespace Webshop.Models
 
         public void Update(Product product)
         {
-            string query = "UPDATE PRODUCTS SET CategoryID = @CategoryID WHERE ProductID = @ProductID";
+            string query = "UPDATE PRODUCT SET CategoryID = @CategoryID WHERE ProductID = @ProductID";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -99,7 +103,7 @@ namespace Webshop.Models
 
         public void Delete(int id)
         {
-            string query = "DELETE FROM PRODUCTS WHERE ProductID = @ProductID";
+            string query = "DELETE FROM PRODUCT WHERE ProductID = @ProductID";
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -108,6 +112,51 @@ namespace Webshop.Models
                 connection.Open();
                 command.ExecuteNonQuery();
             }
+        }
+
+        public void AddCustomer(string firstName, string lastName, string email, string address, string city, string country, int points)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                SqlCommand sql_cmnd = new SqlCommand("uspCreateCustomer", connection);
+                sql_cmnd.CommandType = CommandType.StoredProcedure;
+                sql_cmnd.Parameters.AddWithValue("@FirstName", SqlDbType.NVarChar).Value = firstName;
+                sql_cmnd.Parameters.AddWithValue("@LastName", SqlDbType.NVarChar).Value = lastName;
+                sql_cmnd.Parameters.AddWithValue("@Email", SqlDbType.Int).Value = email;
+                sql_cmnd.Parameters.AddWithValue("@Address", SqlDbType.Int).Value = address;
+                sql_cmnd.Parameters.AddWithValue("@City", SqlDbType.Int).Value = city;
+                sql_cmnd.Parameters.AddWithValue("@Country", SqlDbType.Int).Value = country;
+                sql_cmnd.Parameters.AddWithValue("@Points", SqlDbType.Int).Value = points;
+
+                sql_cmnd.ExecuteNonQuery();
+                connection.Close();
+            }
+        }
+
+        public ObservableCollection<Customer> GetAllCustomers()
+        {
+            var customers = new ObservableCollection<Customer>();
+            string query = "SELECT * FROM vwOrderCustomer WHERE City = 'København'";
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                connection.Open();
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        customers.Add(new Customer
+                        {
+                            Name = (string)reader["CustomerName"]
+                        });
+                    }
+                }
+            }
+
+            return customers;
         }
     }
 }
