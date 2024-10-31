@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Webshop.Models;
 
 namespace Webshop
 {
@@ -19,6 +20,12 @@ namespace Webshop
         public MainWindow()
         {
             InitializeComponent();
+
+            DataContext = this;
+
+            OrderRepo orderRepo = new OrderRepo("Server=localhost;Database=webshop2;Trusted_Connection=True;TrustServerCertificate=true;");
+
+            lborders.ItemsSource = orderRepo.GetOrdersByCustomerId(1);
         }
     }
 }
